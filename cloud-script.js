@@ -1,16 +1,13 @@
-// Load the PlayFab API module
-var PlayFab = require("PlayFab");
-
 // Define the Cloud Script function
 handlers.getPlayerDataList = function (args, context) {
     // Set up the API request parameters
     var request = {
-        PlayFabId: null,
-        Keys: null
+        PlayFabIds: null,
+        Keys: ["Player Data"]
     };
 
     // Call the API to get the list of players
-    PlayFab.server.GetAllUsers({}, function (error, result) {
+    server.GetAllUsers({}, function (error, result) {
         if (error) {
             // Return an error message if the API call failed
             return { error: error };
@@ -20,12 +17,11 @@ handlers.getPlayerDataList = function (args, context) {
                 return user.PlayFabId;
             });
 
-            // Set the PlayFab IDs and data keys for the next API request
-            request.PlayFabId = playFabIds;
-            request.Keys = ["Player Data"];
+            // Set the PlayFab IDs for the next API request
+            request.PlayFabIds = playFabIds;
 
             // Call the API to get the player data
-            PlayFab.server.GetUserData(request, function (error, result) {
+            server.GetUserData(request, function (error, result) {
                 if (error) {
                     // Return an error message if the API call failed
                     return { error: error };
